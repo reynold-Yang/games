@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>老虎机</title>
+	<style>
+		html,body {
+			margin: 0;
+			padding: 0;
+		}
+		
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+		.box {
+			width: 500px;
+			height: 100px;
+			margin: 200px auto;
+			overflow: hidden;
+			border: 3px solid red;
+		}
+
+		.btnBox {
+			width: 303px;
+			height: 105px;
+			margin: 0 auto;
+		}
+
+		.view {
+			width: 32.5%;
+			height: 100%;
+			float: left;
+			border: 2px solid #000;
+			position: relative;
+		}
+
+		.view ul li {
+			width: 100%;
+			height: 100px;
+			background: -webkit-linear-gradient(#fff 0%, #ccc 50%, #fff 100%);
+			background: -o-linear-gradient(#fff 0%, #ccc 50%, #fff 100%);
+			background: linear-gradient(#fff 0%, #ccc 50%, #fff 100%);;
+			border-bottom: 1px solid #000;
+			text-align: center;
+			line-height: 100px;
+			font-size: 50px;
+			font-weight: 700;
+			color: hotpink;
+		}
+
+
+		.view ul li:nth-child(2) {
+			color: red;
+		}
+
+		.view ul li:nth-child(3) {
+			color: pink;
+		}
+
+		.view ul li:nth-child(4) {
+			color: #FFD700;
+		}
+
+		.view ul li:nth-child(5) {
+			color: #FF7F24;
+		}
+
+		.view ul li:nth-child(6) {
+			color: #C6E2FF;
+		}
+
+		.view ul li:nth-child(7) {
+			color: #BCEE68;
+		}
+	
+		.view ul li:nth-child(8) {
+			color: #C1CDC1;
+		}
+
+		.view ul li:nth-child(9) {
+			color: #B0E2FF;
+		}
+
+		.view ul li:nth-child(10) {
+			color: #8B5742;
+		}
+
+
+
+		.view ul {
+			width: 100%;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+		}
+
+
+		button, input {
+			display: block;
+			width: 100px;
+			height: 100px;
+			background-color: pink;
+			margin: 0 auto;
+			float: left;
+		}
+
+	
+		@keyframes win1 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(90%);
+			}
+		}
+		
+		@keyframes win2 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(80%);
+			}
+		}
+
+		@keyframes win3 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(70%);
+			}
+		}
+
+		@keyframes win4 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(60%);
+			}
+		}
+
+		@keyframes win5 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(50%);
+			}
+		}
+		@keyframes win6 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(40%);
+			}
+		}
+		@keyframes win7 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(30%);
+			}
+		}
+
+
+		@keyframes win8 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(20%);
+			}
+		}
+
+		@keyframes win9 {
+			from {
+				transform: translateY(0px);
+			}
+			to {
+				transform: translateY(10%);
+			}
+		}
+
+
+		@keyframes move {
+			to {
+				transform: translateY(90%);
+			}
+		}
+
+
+
+	</style>
+</head>
+<body>
+	<ul class="box">
+		<li class="view">
+			<ul class="one">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>
+				<li>9</li>
+				<li>10</li>
+			</ul>
+		</li>
+		<li class="view">
+			<ul class="two">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>
+				<li>9</li>
+				<li>10</li>
+			</ul>
+		</li>
+		<li class="view">
+			<ul class="there">
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+				<li>5</li>
+				<li>6</li>
+				<li>7</li>
+				<li>8</li>
+				<li>9</li>
+				<li>10</li>
+			</ul>
+		</li>
+	</ul>
+
+	
+	<div class="btnBox">
+		
+		<button> 开始 </button>
+		<input type="button" value="停止(稳赢)" class="stopBtn1">
+		<input type="button" value="停止(随机)" class="stopBtn2">
+
+	</div>
+
+
+	<script>
+		var one = document.querySelector('.one');
+		var two = document.querySelector('.two');
+		var there = document.querySelector('.there');
+
+		var btn = document.querySelector('button');
+
+
+
+		var stopBtn1 = document.querySelector('.stopBtn1');
+
+		var stopBtn2 = document.querySelector('.stopBtn2');
+
+
+		var flag = true;
+
+		// 开始
+		btn.addEventListener('click', function () {
+			flag = false;
+			one.style.animation = 'move 1.5s ease-in ';
+			two.style.animation = 'move 1.5s 0.3s ease-in';
+			there.style.animation = 'move 1.5s 0.6s ease-in';
+
+
+			one.addEventListener('webkitAnimationEnd', animate1, false);
+			two.addEventListener('webkitAnimationEnd', animate2, false);
+			there.addEventListener('webkitAnimationEnd', animate3, false);
+
+		
+		})
+
+
+		function animate1 () {
+			one.style.animation = 'move 0.6s linear infinite';
+		}
+
+		function animate2 () {
+			two.style.animation = 'move 0.7s linear infinite';
+		}
+
+		function animate3 () {
+			there.style.animation = 'move 0.8s linear infinite';
+		}
+
+
+
+
+		function removeEvents () {
+			one.removeEventListener('webkitAnimationEnd', animate1, false);
+	 		two.removeEventListener('webkitAnimationEnd', animate2, false);
+	 		there.removeEventListener('webkitAnimationEnd', animate3, false);
+		}
+
+	
+
+
+		// 稳赢
+
+	 	stopBtn1.onclick = function () {
+	 		if (flag) 
+	 			return;
+	 		var num = Math.floor((Math.random() * 7) + 1);
+	 		stopFn1('win' + num + ' 2s ease-out forwards');
+	 		flag = true;
+	 	}
+
+
+
+	 	
+
+
+
+	 	//  稳赢所调用的函数
+	 	function stopFn1 (options) {
+	 		
+	 		removeEvents();
+	 		one.style.animation = options;
+	 		setTimeout(function () {
+	 			two.style.animation = options;
+	 		}, 300);
+	 		
+
+
+	 		setTimeout(function () {
+	 			there.style.animation = options;
+	 		}, 600);
+	 		
+	 	}
+
+
+
+
+		// 随机按钮点击事件
+
+	 	stopBtn2.onclick = function () {
+
+	 		if (flag)
+	 			return;
+
+	 		removeEvents();
+
+	 		var num1 = Math.floor((Math.random() * 7) + 1);
+	 		var num2 = Math.floor((Math.random() * 7) + 1);
+	 		var num3 = Math.floor((Math.random() * 7) + 1);
+
+
+	 		// var num1 = 3;
+	 		// var num2 = 3;
+	 		// var num3 = 3;
+
+	 		var tempNum = num1 === num2 ? (num1 === num3 ? true : false) : false;
+
+
+	 		one.style.animation = 'win' + num1 + ' 2s ease-out forwards';
+
+
+	 		setTimeout(function () {
+	 			two.style.animation = 'win' + num2 + ' 2s ease-out forwards';
+	 		}, 300);
+
+	 		
+	 		setTimeout(function () {
+	 			there.style.animation = 'win' + num3 + ' 2s ease-out forwards';
+	 		}, 600);
+	 		
+
+	 		there.addEventListener('webkitAnimationEnd', endFn, false);
+
+	 		flag = true;
+
+
+	 		// 游戏结束后运行的函数
+	 		function endFn () {
+
+	 			tempNum ? alert('恭喜你，中奖了') : alert('再接再厉哦');
+
+	 			there.removeEventListener('webkitAnimationEnd', endFn, false);
+
+
+	 		}
+
+	 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</script>
+</body>
+</html>
