@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <script src="./node_modules/jquery/tmp/jquery.js"></script>
+ <title></title>
+ <style>
+
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	
+	#container {
+		width: 300px;
+		height: 300px;
+		margin: 100px auto;
+	}
+
+	#container table {
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		font-size: 30px;
+	}
+	
+	.active {
+		background: red;
+		color: #fff;
+	}
+
+	.start {
+		background-color: pink;
+	}
+
+ </style>
+</head>
+<body>
+<div id="container">
+ 	<table border="1" cellspacing="0">
+ 		<tr>
+ 			<td data-no=1 class="lottery-unit-1">1</td>
+ 			<td data-no=2 class="lottery-unit-2">2</td>
+ 			<td data-no=3 class="lottery-unit-3">3</td>
+ 		</tr>
+ 		<tr>
+ 			<td data-no=8 class="lottery-unit-8">8</td>
+ 			<td class="start">s</td>
+ 			<td data-no=4 class="lottery-unit-4">4</td>
+ 		</tr>
+ 		<tr>
+ 			<td data-no=7 class="lottery-unit-7">7</td>
+ 			<td data-no=6 class="lottery-unit-6">6</td>
+ 			<td data-no=5 class="lottery-unit-5">5</td>
+ 		</tr>
+ 	</table>
+</div>
+
+<script>
+
+	var options = {
+		startType: 'ease',   				// 启动动画类型  ease: 逐渐加速  
+		endRing: 8,							// 第几圈结束
+		// endUnit: 8,  	     			// 结束的位置
+		random: true,						// 开启结束位置随机
+		beforeStartFn: start,				// 开始之前的回调
+		callback: end,						// 结束后的回调
+
+	}
+
+
+
+	lottery(options);
+
+
+	function start() {
+		alert('要开始了');
+	}
+
+	function end(num) {
+		alert('恭喜中了' + num + '号奖品');
+	}
+
+
+
+
+	function lottery (options) {
+		var tds = [];
+		for(var i = 1; i < 9; i++) {
+			tds.push($('.lottery-unit-' + i));
+		}
+
+		// 初始化变量
+			var temp = 0;
+			// 圈数
+			var ring = 1;
+			// 结束位置
+			var endNum = 0;
+			// 结束后的回调
+			var callbackFn = null;
+			// 第几圈结束
+			var endRingNum = 0;
+			// 锁
+			var flag = true;
+
+		$('.start').on('click', function() {
+			if (flag) {
+				flag = false
+				temp = 0;
+				ring = 1;
+				endNum = 0;
+				callbackFn = null;
+				endRingNum = 0;
+
+				if (options.random) 
+					options.endUnit = Math.floor(Math.random() * 8 + 1);
+
+				if (options.beforeStartFn)
+					options.beforeStartFn();
+
+				myFor(tds, options.startType, options.endUnit, function (WinningNo) {
+					options.callback(WinningNo);
+					flag = true;
+				}, options.endRing);
+				
+			}
+		});
+
+
+
+			/**
+			 * [myFor description]
+			 * @param  {jQueryArray} arr     9宫格里面除了抽奖按钮外其余的8个
+			 * @param  {String} animateType  动画开始时候的类型
+			 * @param {number} endUnit       结束位置
+			 * @param {function} callback	 结束后的回调
+			 * @param {number} endRing       第几圈结束
+			 */
+			function myFor(arr, animateType, endUnit, callback, endRing) {
+				if (endRing)
+					endRingNum = endRing
+				if (endUnit)
+					endNum = endUnit;
+				if (callback)
+					callbackFn = callback
+				$('.active').removeClass('active');
+				arr[temp].addClass('active');
+				temp++;
+				if(temp == 8 ) {
+					temp = 0;
+					ring++;	
+				}
+				if (ring === endRingNum) {
+					endAnimate(arr, endNum, callbackFn);
+					return;
+				}
+				switch (animateType) {
+					case 'ease':
+						if(ring == 1) {
+							setTimeout(function () {
+								myFor(arr, 'ease');
+							}, 400 - temp * 50);
+						} else {
+							setTimeout(function () {
+								myFor(arr);
+							}, 50);
+						}
+						break;
+					case undefined:
+						setTimeout(function () {
+								myFor(arr);
+							}, 50);
+					default:
+						// statements_def
+						break;
+				}
+
+			}
+
+
+
+		/**
+		 * 过渡时候的动画（匀速）
+		 * @param  {Array} arr          一个Jquery元素组成的数组
+		 * @param  {number} intervalTime 间隔的时间(例如 从 1 - 2 多长事件切换)
+		 * @param  {number} startUnit    开始的位置
+		 * @param  {number} endUnit      结束的位置
+		 */
+		function animate (arr, intervalTime, startUnit, endUnit) {
+			var deferred = $.Deferred();
+			var activeArr = arr.slice(startUnit - 1, endUnit);
+			for(var i = 0; i < activeArr.length; i++ ) {
+				(function (i) {
+					setTimeout(function() {
+						$('.active').removeClass('active');
+						activeArr[i].addClass('active');
+						if( i == activeArr.length - 1) {
+							setTimeout(function () {
+								deferred.resolve();
+							}, 0);
+						}
+					}, i * intervalTime);
+				})( i );
+			}
+			return deferred;
+		}
+
+
+		/**
+		 * 结束时候的动画（逐渐减速）
+		 * @param  {[Array]} tempArr 同上数组一样
+		 * @param  {[number]} endUnit 结束时候停留的位置
+		 */
+		function endAnimate (tempArr, endUnit, callback) {
+			var headArr = tempArr.slice(0, endUnit);
+			var floorArr = tempArr.slice(endUnit, tempArr.length);
+			var endArr = floorArr.concat(headArr);
+			endArr.unshift(tempArr[endUnit-1]);
+			$.when(animate(headArr, 100, 1, headArr.length))
+				.then(function () {
+					$.when(animate(endArr, 200, 1, 4))
+						.then(function () {
+							$.when(animate(endArr, 300, 4, 9))
+								.then(function () {
+									setTimeout(function () {
+										var WinningNo = $('.active').attr('data-no');
+										console.log(WinningNo);
+										callback(WinningNo);
+									}, 10);
+								});
+						})
+				})
+		}
+	}
+
+	
+</script>
+</body>
+</html>
