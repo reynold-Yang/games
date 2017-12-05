@@ -66,6 +66,8 @@
 
 <script>
 
+    // 依赖于jquery 使用之前请先引入jquery
+
     var options = {
         startType: 'ease',                  // 启动动画类型  ease: 逐渐加速  
         endRing: 8,                         // 第几圈结束
@@ -80,9 +82,10 @@
 
     lottery(options);
 
-
+    // 开始之前掉的函数， 返回值 return ture 代表结束本次抽奖， 返回 false 和 无返回值代表继续本次抽奖
     function start() {
-        console.log('开始了')
+        console.log('开始了');
+        // return true;
     }
 
     function end(num) {
@@ -122,13 +125,16 @@
                 callbackFn = null;
                 endRingNum = 0;
 
+                if (options.beforeStartFn)
+                    var end = options.beforeStartFn();
+
+                if (end)
+                    return;
+
                 if (options.random) 
                     options.endUnit = Math.floor(Math.random() * 8 + 1);
 
-                if (options.beforeStartFn)
-                    options.beforeStartFn();
-
-                if(!options.activeClass)
+                if (!options.activeClass)
                     options.activeClass = 'active';
 
                 myFor(tds, options.startType, options.endUnit, function (WinningNo) {
@@ -179,13 +185,13 @@
                         } else {
                             setTimeout(function () {
                                 myFor(arr);
-                            }, 50);
+                            }, 70);
                         }
                         break;
                     case undefined:
                         setTimeout(function () {
                                 myFor(arr);
-                            }, 50);
+                            }, 70);
                     default:
                         // statements_def
                         break;
