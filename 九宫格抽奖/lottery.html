@@ -3,7 +3,6 @@
 <head>
  <meta charset="utf-8">
  <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <script src="./node_modules/jquery/tmp/jquery.js"></script>
  <title></title>
  <style>
 
@@ -63,7 +62,7 @@
         </tr>
     </table>
 </div>
-
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script>
 
     // 依赖于jquery 使用之前请先引入jquery
@@ -71,8 +70,8 @@
     var options = {
         startType: 'ease',                  // 启动动画类型  ease: 逐渐加速  
         endRing: 8,                         // 第几圈结束
-        // endUnit: 8,                      // 指定中几号
-        random: true,                       // 开启随机中奖模式
+        endUnit: 3,                      // 指定中几号
+        // random: true,                       // 开启随机中奖模式
         beforeStartFn: start,               // 开始之前的回调
         callback: end,                      // 结束后的回调
         activeClass: 'active2'              // 指定选中时候类名，不指定默认为 active
@@ -82,10 +81,10 @@
 
     lottery(options);
 
-    // 开始之前掉的函数， 返回值 return ture 代表结束本次抽奖， 返回 false 和 无返回值代表继续本次抽奖
+    // 开始之前调用的函数， 返回值 return ture 代表结束本次抽奖， 返回 false 和 无返回值代表继续本次抽奖
     function start() {
         console.log('开始了');
-        // return true;
+        return true;
     }
 
     function end(num) {
@@ -128,8 +127,10 @@
                 if (options.beforeStartFn)
                     var end = options.beforeStartFn();
 
-                if (end)
+                if (end) {
+                    flag = true;
                     return;
+                }
 
                 if (options.random) 
                     options.endUnit = Math.floor(Math.random() * 8 + 1);
